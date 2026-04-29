@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snow Rainbow LLC — Salesforce Marketing Cloud Consultants</title>
+<meta name="google-site-verification" content="R4_kwLoBTRU88jjcoSrrLTdh1UT_qWO4IATfhYPXKsQ" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mc-blue: #00A1E0;
+    --mc-navy: #032D60;
+    --mc-orange: #FF6B35;
+    --mc-sky: #B0E0F5;
+    --mc-light: #F0F8FF;
+    --mc-dark: #021A3A;
+    --mc-mid: #0176D3;
+    --white: #FFFFFF;
+    --gray-50: #F8FAFC;
+    --gray-100: #EFF3F8;
+    --gray-600: #4A5568;
+    --gray-800: #1A202C;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --shadow: 0 4px 24px rgba(0,29,96,0.10);
+    --shadow-lg: 0 12px 48px rgba(0,29,96,0.16);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); color: var(--gray-800); background: var(--white); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(2, 20, 58, 0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,161,224,0.18);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+  .nav-logo svg { width: 36px; height: 36px; }
+  .nav-logo-text { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--white); letter-spacing: -0.3px; }
+  .nav-logo-text span { color: var(--mc-blue); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 0.3px; transition: color 0.2s; cursor: pointer; }
+  .nav-links a:hover, .nav-links a.active { color: var(--mc-blue); }
+  .nav-cta { background: var(--mc-blue); color: var(--white); padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+  .nav-cta:hover { background: var(--mc-mid); transform: translateY(-1px); }
+
+  /* PAGES */
+  .page { display: none; padding-top: 70px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ===== HOME ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--mc-dark) 0%, var(--mc-navy) 55%, #0D4F8C 100%);
+    min-height: 92vh; position: relative; overflow: hidden;
+    display: flex; align-items: center; padding: 80px 8%;
+  }
+  .hero-grid { position: absolute; inset: 0; opacity: 0.06; background-image: linear-gradient(rgba(0,161,224,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(0,161,224,0.8) 1px, transparent 1px); background-size: 60px 60px; }
+  .hero-orb { position: absolute; right: -100px; top: 50%; transform: translateY(-50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle at 40% 40%, rgba(0,161,224,0.22), rgba(255,107,53,0.08) 60%, transparent 80%); pointer-events: none; }
+  .hero-arc { position: absolute; right: 80px; top: 50%; transform: translateY(-50%); opacity: 0.7; }
+  .hero-content { position: relative; z-index: 2; max-width: 680px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,161,224,0.15); border: 1px solid rgba(0,161,224,0.35); color: var(--mc-sky); padding: 7px 16px; border-radius: 50px; font-size: 13px; font-weight: 500; margin-bottom: 32px; letter-spacing: 0.4px; }
+  .hero-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--mc-blue); display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+  .hero h1 { font-family: var(--font-display); font-size: clamp(42px, 5vw, 68px); font-weight: 700; color: var(--white); line-height: 1.1; margin-bottom: 24px; letter-spacing: -1px; }
+  .hero h1 em { font-style: normal; color: var(--mc-blue); }
+  .hero p { font-size: 18px; color: rgba(255,255,255,0.68); line-height: 1.75; margin-bottom: 44px; max-width: 560px; }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary { background: var(--mc-blue); color: var(--white); padding: 15px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+  .btn-primary:hover { background: var(--mc-mid); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,161,224,0.35); }
+  .btn-outline { background: transparent; color: var(--white); padding: 15px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; border: 1.5px solid rgba(255,255,255,0.28); cursor: pointer; transition: all 0.2s; }
+  .btn-outline:hover { border-color: var(--mc-blue); color: var(--mc-blue); }
+
+  .hero-stats { display: flex; gap: 48px; margin-top: 64px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .stat { }
+  .stat-num { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--white); }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; letter-spacing: 0.3px; }
+
+  /* SECTIONS */
+  section { padding: 100px 8%; }
+  .section-tag { display: inline-block; background: rgba(0,161,224,0.1); color: var(--mc-blue); font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; margin-bottom: 20px; }
+  .section-title { font-family: var(--font-display); font-size: clamp(32px, 4vw, 48px); font-weight: 700; color: var(--mc-navy); line-height: 1.15; margin-bottom: 16px; }
+  .section-sub { font-size: 17px; color: var(--gray-600); line-height: 1.7; max-width: 600px; }
+  .text-center { text-align: center; }
+  .text-center .section-sub { margin: 0 auto; }
+
+  /* SERVICES GRID (home) */
+  .services-home { background: var(--gray-50); }
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 56px; }
+  .service-card { background: var(--white); border-radius: var(--radius-lg); padding: 36px 32px; border: 1px solid rgba(0,29,96,0.08); transition: all 0.25s; position: relative; overflow: hidden; }
+  .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--mc-blue), var(--mc-orange)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+  .service-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 24px; }
+  .service-card h3 { font-size: 18px; font-weight: 600; color: var(--mc-navy); margin-bottom: 12px; }
+  .service-card p { font-size: 14px; color: var(--gray-600); line-height: 1.7; }
+
+  /* PROCESS */
+  .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 56px; position: relative; }
+  .process-steps::before { content: ''; position: absolute; top: 32px; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, var(--mc-blue), var(--mc-orange)); z-index: 0; }
+  .process-step { text-align: center; position: relative; z-index: 1; }
+  .step-num { width: 64px; height: 64px; border-radius: 50%; background: var(--mc-navy); color: var(--white); font-family: var(--font-display); font-size: 22px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 3px solid var(--mc-blue); }
+  .process-step h4 { font-size: 16px; font-weight: 600; color: var(--mc-navy); margin-bottom: 10px; }
+  .process-step p { font-size: 13px; color: var(--gray-600); line-height: 1.6; }
+
+  /* CLIENTS */
+  .clients-strip { background: var(--mc-navy); padding: 50px 8%; }
+  .clients-strip p { text-align: center; font-size: 13px; color: rgba(255,255,255,0.45); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; }
+  .clients-logos { display: flex; justify-content: center; align-items: center; gap: 48px; flex-wrap: wrap; }
+  .client-logo { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.35); letter-spacing: -0.5px; transition: color 0.2s; }
+  .client-logo:hover { color: rgba(255,255,255,0.7); }
+
+  /* CTA STRIP */
+  .cta-strip { background: linear-gradient(135deg, var(--mc-blue) 0%, var(--mc-mid) 50%, var(--mc-navy) 100%); padding: 80px 8%; text-align: center; }
+  .cta-strip h2 { font-family: var(--font-display); font-size: 42px; font-weight: 700; color: var(--white); margin-bottom: 16px; }
+  .cta-strip p { font-size: 18px; color: rgba(255,255,255,0.75); margin-bottom: 36px; }
+  .btn-white { background: var(--white); color: var(--mc-navy); padding: 16px 36px; border-radius: 10px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.2); }
+
+  /* ===== SERVICES PAGE ===== */
+  .page-hero { background: linear-gradient(135deg, var(--mc-dark) 0%, var(--mc-navy) 100%); padding: 80px 8% 100px; position: relative; overflow: hidden; }
+  .page-hero-grid { position: absolute; inset: 0; opacity: 0.05; background-image: linear-gradient(rgba(0,161,224,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(0,161,224,0.8) 1px, transparent 1px); background-size: 40px 40px; }
+  .page-hero h1 { font-family: var(--font-display); font-size: clamp(36px, 5vw, 58px); font-weight: 700; color: var(--white); max-width: 700px; line-height: 1.15; margin-bottom: 20px; position: relative; z-index: 2; }
+  .page-hero p { font-size: 18px; color: rgba(255,255,255,0.65); max-width: 580px; line-height: 1.7; position: relative; z-index: 2; }
+
+  .services-detail { padding: 80px 8%; }
+  .service-row { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-bottom: 100px; }
+  .service-row.reverse { direction: rtl; }
+  .service-row.reverse > * { direction: ltr; }
+  .service-visual { background: linear-gradient(135deg, rgba(0,161,224,0.08) 0%, rgba(3,45,96,0.06) 100%); border-radius: var(--radius-lg); padding: 48px; border: 1px solid rgba(0,161,224,0.15); display: flex; align-items: center; justify-content: center; min-height: 280px; }
+  .service-text h2 { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--mc-navy); margin-bottom: 16px; line-height: 1.2; }
+  .service-text p { font-size: 16px; color: var(--gray-600); line-height: 1.75; margin-bottom: 24px; }
+  .service-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .service-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--gray-600); }
+  .service-features li::before { content: ''; width: 18px; height: 18px; border-radius: 50%; background: rgba(0,161,224,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l2.5 2.5L9 1' stroke='%2300A1E0' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: center; }
+
+  /* PRICING */
+  .pricing-section { background: var(--gray-50); padding: 80px 8%; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .pricing-card { background: var(--white); border-radius: var(--radius-lg); padding: 40px 32px; border: 1px solid rgba(0,29,96,0.1); position: relative; }
+  .pricing-card.featured { background: var(--mc-navy); border-color: var(--mc-blue); transform: scale(1.04); }
+  .pricing-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--mc-blue); color: var(--white); font-size: 12px; font-weight: 600; padding: 5px 16px; border-radius: 50px; white-space: nowrap; }
+  .pricing-plan { font-size: 13px; font-weight: 600; color: var(--mc-blue); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .pricing-price { font-family: var(--font-display); font-size: 42px; font-weight: 700; color: var(--mc-navy); margin-bottom: 4px; }
+  .pricing-card.featured .pricing-price { color: var(--white); }
+  .pricing-price span { font-size: 16px; font-weight: 400; color: var(--gray-600); }
+  .pricing-card.featured .pricing-price span { color: rgba(255,255,255,0.6); }
+  .pricing-desc { font-size: 14px; color: var(--gray-600); margin-bottom: 28px; }
+  .pricing-card.featured .pricing-desc { color: rgba(255,255,255,0.6); }
+  .pricing-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .pricing-list li { font-size: 14px; color: var(--gray-600); display: flex; gap: 8px; }
+  .pricing-card.featured .pricing-list li { color: rgba(255,255,255,0.8); }
+  .pricing-list li::before { content: '✓'; color: var(--mc-blue); font-weight: 700; flex-shrink: 0; }
+
+  /* ===== ABOUT ===== */
+  .about-story { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; padding: 100px 8%; }
+  .about-img { background: linear-gradient(135deg, var(--mc-navy) 0%, #1a6eb5 100%); border-radius: var(--radius-lg); min-height: 480px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .about-img-inner { text-align: center; color: var(--white); }
+  .about-img-inner .big-num { font-family: var(--font-display); font-size: 96px; font-weight: 700; color: rgba(255,255,255,0.12); line-height: 1; }
+  .about-text h2 { font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--mc-navy); line-height: 1.2; margin-bottom: 20px; }
+  .about-text p { font-size: 16px; color: var(--gray-600); line-height: 1.8; margin-bottom: 20px; }
+  .values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .value-item { padding: 20px; background: var(--gray-50); border-radius: var(--radius); border-left: 3px solid var(--mc-blue); }
+  .value-item h4 { font-size: 14px; font-weight: 600; color: var(--mc-navy); margin-bottom: 6px; }
+  .value-item p { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
+
+  /* TEAM */
+  .team-section { background: var(--gray-50); padding: 80px 8%; }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 48px; }
+  .team-card { background: var(--white); border-radius: var(--radius-lg); padding: 36px 28px; text-align: center; border: 1px solid rgba(0,29,96,0.08); transition: all 0.25s; }
+  .team-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .team-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--mc-blue), var(--mc-navy)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--white); margin: 0 auto 20px; }
+  .team-card h3 { font-size: 18px; font-weight: 600; color: var(--mc-navy); margin-bottom: 6px; }
+  .team-card .role { font-size: 13px; color: var(--mc-blue); font-weight: 500; margin-bottom: 12px; }
+  .team-card p { font-size: 13px; color: var(--gray-600); line-height: 1.6; }
+
+  /* ===== CASE STUDIES ===== */
+  .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; padding: 80px 8%; }
+  .case-card { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(0,29,96,0.1); transition: all 0.3s; cursor: pointer; }
+  .case-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .case-header { padding: 36px 32px; }
+  .case-industry { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+  .case-card h3 { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--white); line-height: 1.3; margin-bottom: 12px; }
+  .case-card .case-sub { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  .case-body { background: var(--white); padding: 28px 32px; }
+  .case-metrics { display: flex; gap: 24px; margin-bottom: 20px; }
+  .metric { }
+  .metric-val { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--mc-navy); }
+  .metric-label { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+  .case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: rgba(0,161,224,0.1); color: var(--mc-mid); font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 50px; }
+
+  /* ===== CONTACT ===== */
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; padding: 80px 8%; align-items: start; }
+  .contact-info h2 { font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--mc-navy); line-height: 1.2; margin-bottom: 20px; }
+  .contact-info p { font-size: 16px; color: var(--gray-600); line-height: 1.8; margin-bottom: 40px; }
+  .contact-details { display: flex; flex-direction: column; gap: 24px; }
+  .contact-item { display: flex; gap: 16px; align-items: flex-start; }
+  .contact-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(0,161,224,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; }
+  .contact-item h4 { font-size: 14px; font-weight: 600; color: var(--mc-navy); margin-bottom: 4px; }
+  .contact-item p { font-size: 14px; color: var(--gray-600); }
+  .contact-form { background: var(--white); border-radius: var(--radius-lg); padding: 48px 40px; border: 1px solid rgba(0,29,96,0.1); box-shadow: var(--shadow); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--mc-navy); margin-bottom: 8px; letter-spacing: 0.2px; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 1.5px solid rgba(0,29,96,0.15); border-radius: 10px; font-family: var(--font-body); font-size: 14px; color: var(--gray-800); background: var(--white); transition: border-color 0.2s; outline: none; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--mc-blue); box-shadow: 0 0 0 3px rgba(0,161,224,0.12); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-success { display: none; background: rgba(0,161,224,0.08); border: 1px solid rgba(0,161,224,0.25); border-radius: 10px; padding: 20px; text-align: center; color: var(--mc-navy); font-size: 15px; }
+
+  /* FOOTER */
+  footer { background: var(--mc-dark); padding: 60px 8% 32px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-brand p { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-top: 16px; max-width: 300px; }
+  .footer-col h4 { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.35); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 14px; color: rgba(255,255,255,0.55); text-decoration: none; margin-bottom: 10px; cursor: pointer; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--mc-blue); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 13px; color: rgba(255,255,255,0.3); }
+  .footer-cert { display: flex; gap: 12px; }
+  .cert-badge { background: rgba(0,161,224,0.15); border: 1px solid rgba(0,161,224,0.25); color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 6px; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 60px 5%; }
+    .hero-stats { gap: 28px; flex-wrap: wrap; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .process-steps::before { display: none; }
+    .service-row, .about-story, .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+    .service-row.reverse { direction: ltr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .pricing-card.featured { transform: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <svg viewBox="0 0 36 36" fill="none">
+      <circle cx="18" cy="18" r="17" fill="rgba(0,161,224,0.12)" stroke="rgba(0,161,224,0.4)" stroke-width="1"/>
+      <path d="M18 8 Q24 12 26 18 Q24 24 18 28 Q12 24 10 18 Q12 12 18 8Z" fill="none" stroke="#00A1E0" stroke-width="1.5"/>
+      <circle cx="18" cy="10" r="2" fill="#FF6B35"/>
+      <circle cx="26" cy="18" r="2" fill="#00A1E0"/>
+      <circle cx="18" cy="26" r="2" fill="#B0E0F5"/>
+      <circle cx="10" cy="18" r="2" fill="#0176D3"/>
+      <circle cx="18" cy="18" r="3.5" fill="#00A1E0"/>
+      <line x1="18" y1="6" x2="18" y2="14" stroke="rgba(0,161,224,0.3)" stroke-width="1"/>
+      <line x1="18" y1="22" x2="18" y2="30" stroke="rgba(0,161,224,0.3)" stroke-width="1"/>
+      <line x1="6" y1="18" x2="14" y2="18" stroke="rgba(0,161,224,0.3)" stroke-width="1"/>
+      <line x1="22" y1="18" x2="30" y2="18" stroke="rgba(0,161,224,0.3)" stroke-width="1"/>
+    </svg>
+    <span class="nav-logo-text">Snow <span>Rainbow</span></span>
+  </div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a onclick="showPage('services')" id="nav-services">Services</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">About</a></li>
+    <li><a onclick="showPage('cases')" id="nav-cases">Case Studies</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="showPage('contact')">Get a Free Consultation</button>
+</nav>
+
+<!-- ===== HOME ===== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Salesforce Marketing Cloud Experts</div>
+      <h1>Illuminate Every<br><em>Customer Journey</em></h1>
+      <p>Snow Rainbow LLC transforms how enterprises connect with customers — through intelligent Marketing Cloud strategy, implementation, and optimization that drives measurable growth.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Start Your Journey</button>
+        <button class="btn-outline" onclick="showPage('cases')">View Case Studies</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Successful Implementations</div></div>
+        <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Client Retention Rate</div></div>
+        <div class="stat"><div class="stat-num">8+</div><div class="stat-label">Years of Expertise</div></div>
+        <div class="stat"><div class="stat-num">$2.4B</div><div class="stat-label">Revenue Influenced</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="clients-strip">
+    <p>Trusted by industry leaders</p>
+    <div class="clients-logos">
+      <span class="client-logo">FinServ Global</span>
+      <span class="client-logo">HealthCore Inc.</span>
+      <span class="client-logo">RetailNexus</span>
+      <span class="client-logo">TechVantage</span>
+      <span class="client-logo">MediPath</span>
+    </div>
+  </div>
+
+  <section class="services-home">
+    <div class="text-center">
+      <span class="section-tag">What We Do</span>
+      <h2 class="section-title">End-to-End Marketing Cloud Excellence</h2>
+      <p class="section-sub">From strategy to execution, we deliver Marketing Cloud solutions that create real customer impact and drive business results.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(0,161,224,0.1);">🎯</div>
+        <h3>Journey Builder Strategy</h3>
+        <p>Design and implement multi-channel customer journeys that nurture leads and drive conversions through intelligent automation and personalization.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(255,107,53,0.1);">📧</div>
+        <h3>Email Studio Optimization</h3>
+        <p>Build high-performance email programs with dynamic content, A/B testing, and advanced segmentation to maximize engagement and ROI.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(3,45,96,0.08);">📊</div>
+        <h3>Data Cloud Integration</h3>
+        <p>Unify your customer data across all touchpoints, enabling real-time personalization and predictive insights that drive smarter marketing decisions.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(0,161,224,0.1);">🤖</div>
+        <h3>Einstein AI Implementation</h3>
+        <p>Harness Salesforce Einstein to automate send-time optimization, predictive scoring, and AI-powered content recommendations at scale.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(255,107,53,0.1);">📱</div>
+        <h3>Mobile & Social Studio</h3>
+        <p>Engage customers across SMS, push notifications, and social channels with coordinated, personalized messaging that meets them where they are.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:rgba(3,45,96,0.08);">🔧</div>
+        <h3>Platform Migration & Support</h3>
+        <p>Seamless migration from legacy platforms, plus ongoing managed services and technical support to keep your Marketing Cloud running at peak performance.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="text-center">
+      <span class="section-tag">Our Process</span>
+      <h2 class="section-title">How We Deliver Results</h2>
+      <p class="section-sub">A proven four-phase methodology that ensures every engagement delivers measurable outcomes from day one.</p>
+    </div>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <h4>Discover & Audit</h4>
+        <p>Deep-dive into your current stack, data maturity, and marketing goals to build a clear picture of opportunities.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <h4>Architect & Plan</h4>
+        <p>Design a custom Marketing Cloud architecture aligned to your business objectives, data strategy, and team capacity.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <h4>Build & Integrate</h4>
+        <p>Implement with precision — configuring, customizing, and integrating Marketing Cloud across your entire tech ecosystem.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <h4>Optimize & Scale</h4>
+        <p>Continuous performance monitoring, A/B testing, and strategic refinement to compound results over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-strip">
+    <h2>Ready to Transform Your Customer Journeys?</h2>
+    <p>Join 50+ enterprises that chose Snow Rainbow LLC to power their Marketing Cloud success.</p>
+    <button class="btn-white" onclick="showPage('contact')">Schedule a Free Consultation</button>
+  </div>
+</div>
+
+<!-- ===== SERVICES ===== -->
+<div class="page" id="page-services">
+  <div class="page-hero">
+    <div class="page-hero-grid"></div>
+    <span class="section-tag" style="position:relative;z-index:2;">Our Services</span>
+    <h1>Marketing Cloud Solutions Built for Enterprise Scale</h1>
+    <p>From initial strategy to full-scale implementation, Snow Rainbow LLC covers every layer of your Marketing Cloud ecosystem.</p>
+  </div>
+
+  <div class="services-detail">
+    <div class="service-row">
+      <div class="service-visual">
+        <svg width="200" height="160" viewBox="0 0 200 160">
+          <circle cx="100" cy="80" r="60" fill="none" stroke="rgba(0,161,224,0.2)" stroke-width="1.5" stroke-dasharray="6,4"/>
+          <circle cx="100" cy="80" r="35" fill="rgba(0,161,224,0.1)" stroke="#00A1E0" stroke-width="1.5"/>
+          <circle cx="100" cy="30" r="10" fill="#00A1E0"/>
+          <circle cx="143" cy="105" r="10" fill="#FF6B35"/>
+          <circle cx="57" cy="105" r="10" fill="#0176D3"/>
+          <line x1="100" y1="40" x2="100" y2="55" stroke="#00A1E0" stroke-width="1.5"/>
+          <line x1="134" y1="97" x2="123" y2="90" stroke="#FF6B35" stroke-width="1.5"/>
+          <line x1="66" y1="97" x2="77" y2="90" stroke="#0176D3" stroke-width="1.5"/>
+          <circle cx="100" cy="80" r="8" fill="#032D60"/>
+          <text x="100" y="155" text-anchor="middle" font-size="11" fill="rgba(3,45,96,0.5)" font-family="DM Sans">Journey Builder</text>
+        </svg>
+      </div>
+      <div class="service-text">
+        <span class="section-tag">Core Service</span>
+        <h2>Journey Builder & Automation</h2>
+        <p>Create sophisticated multi-channel customer journeys that respond to real behavior in real time. We design, build, and optimize Journey Builder programs that turn prospects into loyal customers.</p>
+        <ul class="service-features">
+          <li>Multi-step, multi-channel journey architecture</li>
+          <li>Event-triggered and time-based automation logic</li>
+          <li>Transactional, promotional, and lifecycle journey types</li>
+          <li>Split testing and decision-split optimization</li>
+          <li>Real-time journey analytics and conversion tracking</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="service-row reverse">
+      <div class="service-visual">
+        <svg width="200" height="160" viewBox="0 0 200 160">
+          <rect x="20" y="20" width="160" height="110" rx="8" fill="rgba(0,161,224,0.06)" stroke="rgba(0,161,224,0.2)" stroke-width="1.5"/>
+          <rect x="35" y="38" width="130" height="18" rx="4" fill="rgba(0,161,224,0.15)"/>
+          <rect x="35" y="64" width="90" height="8" rx="4" fill="rgba(0,29,96,0.1)"/>
+          <rect x="35" y="78" width="110" height="8" rx="4" fill="rgba(0,29,96,0.08)"/>
+          <rect x="35" y="92" width="70" height="8" rx="4" fill="rgba(0,29,96,0.06)"/>
+          <rect x="35" y="112" width="50" height="14" rx="6" fill="#00A1E0"/>
+          <text x="60" y="122" text-anchor="middle" font-size="8" fill="white" font-family="DM Sans">Send Now</text>
+        </svg>
+      </div>
+      <div class="service-text">
+        <span class="section-tag">Core Service</span>
+        <h2>Email Studio & Content Builder</h2>
+        <p>Build enterprise-grade email programs with dynamic personalization, responsive templates, and advanced A/B testing frameworks that consistently outperform industry benchmarks.</p>
+        <ul class="service-features">
+          <li>Dynamic content blocks and personalization strings</li>
+          <li>Responsive HTML template design and development</li>
+          <li>AMPscript and SSJS custom scripting</li>
+          <li>Deliverability optimization and IP warming strategies</li>
+          <li>Advanced A/B and multivariate testing programs</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="service-row">
+      <div class="service-visual">
+        <svg width="200" height="160" viewBox="0 0 200 160">
+          <ellipse cx="100" cy="85" rx="70" ry="45" fill="rgba(0,161,224,0.06)" stroke="rgba(0,161,224,0.2)" stroke-width="1.5"/>
+          <circle cx="60" cy="60" r="18" fill="rgba(0,161,224,0.12)" stroke="#00A1E0" stroke-width="1.5"/>
+          <circle cx="140" cy="60" r="18" fill="rgba(255,107,53,0.12)" stroke="#FF6B35" stroke-width="1.5"/>
+          <circle cx="100" cy="110" r="18" fill="rgba(3,45,96,0.12)" stroke="#032D60" stroke-width="1.5"/>
+          <text x="60" y="64" text-anchor="middle" font-size="9" fill="#032D60" font-family="DM Sans">CRM</text>
+          <text x="140" y="64" text-anchor="middle" font-size="9" fill="#032D60" font-family="DM Sans">MC</text>
+          <text x="100" y="114" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.9)" font-family="DM Sans">CDP</text>
+          <line x1="78" y1="65" x2="122" y2="65" stroke="rgba(0,161,224,0.4)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="72" y1="75" x2="92" y2="97" stroke="rgba(0,29,96,0.3)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="128" y1="75" x2="108" y2="97" stroke="rgba(255,107,53,0.3)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        </svg>
+      </div>
+      <div class="service-text">
+        <span class="section-tag">Advanced Service</span>
+        <h2>Data Cloud & CDP Integration</h2>
+        <p>Unify fragmented customer data into a single, actionable profile. We architect and implement Data Cloud solutions that power real-time personalization, predictive segmentation, and cross-channel orchestration.</p>
+        <ul class="service-features">
+          <li>Data ingestion and stream configuration</li>
+          <li>Identity resolution and profile unification</li>
+          <li>Segment builder and activation strategy</li>
+          <li>CRM and third-party system integration</li>
+          <li>Calculated insights and data model design</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="pricing-section">
+    <div class="text-center">
+      <span class="section-tag">Engagement Models</span>
+      <h2 class="section-title">Choose Your Partnership</h2>
+      <p class="section-sub">Flexible engagement options designed to match your project scope, team size, and timeline.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-plan">Starter</div>
+        <div class="pricing-price">$8,500<span>/mo</span></div>
+        <div class="pricing-desc">For teams getting started with Marketing Cloud</div>
+        <ul class="pricing-list">
+          <li>Marketing Cloud audit & roadmap</li>
+          <li>2 Journey Builder builds/month</li>
+          <li>Email Studio setup & templates</li>
+          <li>Monthly strategy sessions</li>
+          <li>Email + Slack support</li>
+        </ul>
+        <button class="btn-primary" onclick="showPage('contact')" style="width:100%">Get Started</button>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-plan" style="color:#00A1E0;">Growth</div>
+        <div class="pricing-price">$18,000<span>/mo</span></div>
+        <div class="pricing-desc" style="color:rgba(255,255,255,0.6);">For scaling enterprises driving full-funnel automation</div>
+        <ul class="pricing-list">
+          <li>Full Marketing Cloud implementation</li>
+          <li>Unlimited Journey Builder builds</li>
+          <li>Data Cloud integration</li>
+          <li>Einstein AI configuration</li>
+          <li>Weekly executive reporting</li>
+          <li>Dedicated consultant</li>
+          <li>24/7 priority support</li>
+        </ul>
+        <button class="btn-primary" onclick="showPage('contact')" style="width:100%">Get Started</button>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-plan">Enterprise</div>
+        <div class="pricing-price">Custom</div>
+        <div class="pricing-desc">Bespoke engagements for complex, multi-brand organizations</div>
+        <ul class="pricing-list">
+          <li>Multi-BU architecture & governance</li>
+          <li>Full platform migration</li>
+          <li>Custom integrations & APIs</li>
+          <li>Team training & certification prep</li>
+          <li>Fractional Marketing Cloud Director</li>
+          <li>SLA-backed managed services</li>
+        </ul>
+        <button class="btn-outline" onclick="showPage('contact')" style="width:100%">Contact Us</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<div class="page" id="page-about">
+  <div class="page-hero">
+    <div class="page-hero-grid"></div>
+    <span class="section-tag" style="position:relative;z-index:2;">About Us</span>
+    <h1>Built by Practitioners, for Practitioners</h1>
+    <p>Snow Rainbow LLC was founded by Salesforce Marketing Cloud veterans who knew there had to be a better way to deliver transformation that actually sticks.</p>
+  </div>
+
+  <div class="about-story">
+    <div class="about-img">
+      <div class="about-img-inner">
+        <div class="big-num">8+</div>
+        <p style="color:rgba(255,255,255,0.7);font-size:18px;font-weight:500;">Years of Marketing<br>Cloud Excellence</p>
+        <div style="display:flex;gap:24px;justify-content:center;margin-top:32px;">
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#00A1E0;">50+</div><div style="font-size:12px;color:rgba(255,255,255,0.5);">Projects</div></div>
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#FF6B35;">15+</div><div style="font-size:12px;color:rgba(255,255,255,0.5);">Experts</div></div>
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#B0E0F5;">12</div><div style="font-size:12px;color:rgba(255,255,255,0.5);">Certs</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="about-text">
+      <span class="section-tag">Our Story</span>
+      <h2>Where Strategy Meets Execution</h2>
+      <p>Snow Rainbow LLC was founded with a single conviction: that Marketing Cloud implementations fail not because of technology, but because of a gap between strategic vision and technical execution.</p>
+      <p>We bridged that gap by building a team that lives on both sides — consultants who code, and engineers who think commercially. The result is a firm that delivers implementations that not only work technically, but drive the business outcomes that matter.</p>
+      <p>Today, we serve enterprise clients across healthcare, financial services, retail, and technology — helping them turn Marketing Cloud from a platform they own into a competitive advantage they wield.</p>
+      <div class="values-grid">
+        <div class="value-item">
+          <h4>Outcome-First</h4>
+          <p>Every decision ties back to measurable business impact, not technical elegance for its own sake.</p>
+        </div>
+        <div class="value-item">
+          <h4>Radical Transparency</h4>
+          <p>We tell clients what they need to hear, not what they want to hear. Always.</p>
+        </div>
+        <div class="value-item">
+          <h4>Deep Expertise</h4>
+          <p>No junior-heavy teams. Every engagement is led by a certified Marketing Cloud specialist.</p>
+        </div>
+        <div class="value-item">
+          <h4>Long-term Partnership</h4>
+          <p>We build relationships that outlast projects, becoming an extension of your internal team.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="team-section">
+    <div class="text-center">
+      <span class="section-tag">Our Team</span>
+      <h2 class="section-title">Marketing Cloud Specialists</h2>
+      <p class="section-sub">A team of certified practitioners with deep hands-on experience across every Marketing Cloud product.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">AR</div>
+        <h3>Aisha Rahman</h3>
+        <div class="role">Founder & Managing Director</div>
+        <p>8+ years in Salesforce Marketing Cloud. Former Salesforce Solutions Architect. MC Email Specialist & Developer certified.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">JK</div>
+        <h3>James Kowalski</h3>
+        <div class="role">VP, Technical Delivery</div>
+        <p>Expert in Data Cloud architecture, AMPscript, and enterprise API integrations. 8 Salesforce certifications.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">MS</div>
+        <h3>Maya Sharma</h3>
+        <div class="role">Lead Journey Strategist</div>
+        <p>Specializes in lifecycle automation and revenue-driving journey programs. $500M+ in influenced pipeline.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">DL</div>
+        <h3>David Lee</h3>
+        <div class="role">Einstein & Analytics Lead</div>
+        <p>Salesforce Einstein specialist with a background in data science. Helps clients unlock predictive capabilities at scale.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CASE STUDIES ===== -->
+<div class="page" id="page-cases">
+  <div class="page-hero">
+    <div class="page-hero-grid"></div>
+    <span class="section-tag" style="position:relative;z-index:2;">Case Studies</span>
+    <h1>Real Results, Real Clients</h1>
+    <p>From legacy migrations to AI-powered personalization, here's how we've helped leading enterprises unlock the full power of Marketing Cloud.</p>
+  </div>
+
+  <div class="cases-grid">
+    <div class="case-card">
+      <div class="case-header" style="background:linear-gradient(135deg,#032D60,#0176D3);">
+        <div class="case-industry" style="color:#B0E0F5;">Healthcare</div>
+        <h3>Patient Journey Transformation for a National Health System</h3>
+        <p class="case-sub">Rebuilt fragmented patient communications into a unified, HIPAA-compliant Marketing Cloud ecosystem.</p>
+      </div>
+      <div class="case-body">
+        <div class="case-metrics">
+          <div class="metric"><div class="metric-val">312%</div><div class="metric-label">Increase in email engagement</div></div>
+          <div class="metric"><div class="metric-val">$4.2M</div><div class="metric-label">Annual cost savings</div></div>
+        </div>
+        <div class="case-tags">
+          <span class="tag">Journey Builder</span><span class="tag">Data Cloud</span><span class="tag">HIPAA Compliance</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-header" style="background:linear-gradient(135deg,#7B2D00,#FF6B35);">
+        <div class="case-industry" style="color:#FFD4B8;">Financial Services</div>
+        <h3>Einstein-Powered Personalization for a Top-10 U.S. Bank</h3>
+        <p class="case-sub">Deployed Einstein Send Time Optimization and predictive scoring across 2.4M customer profiles.</p>
+      </div>
+      <div class="case-body">
+        <div class="case-metrics">
+          <div class="metric"><div class="metric-val">47%</div><div class="metric-label">Lift in open rates</div></div>
+          <div class="metric"><div class="metric-val">3.8x</div><div class="metric-label">ROI in 12 months</div></div>
+        </div>
+        <div class="case-tags">
+          <span class="tag">Einstein AI</span><span class="tag">Email Studio</span><span class="tag">Personalization</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-header" style="background:linear-gradient(135deg,#1A202C,#2D3748);">
+        <div class="case-industry" style="color:rgba(255,255,255,0.5);">Retail</div>
+        <h3>Omnichannel Lifecycle Program for a National Retailer</h3>
+        <p class="case-sub">Migrated from Mailchimp and built a full lifecycle program — welcome, win-back, VIP, and cart abandonment.</p>
+      </div>
+      <div class="case-body">
+        <div class="case-metrics">
+          <div class="metric"><div class="metric-val">$11M</div><div class="metric-label">Incremental revenue attributed</div></div>
+          <div class="metric"><div class="metric-val">62%</div><div class="metric-label">Reduction in churn</div></div>
+        </div>
+        <div class="case-tags">
+          <span class="tag">Platform Migration</span><span class="tag">Lifecycle Automation</span><span class="tag">Mobile Studio</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-header" style="background:linear-gradient(135deg,#064E3B,#047857);">
+        <div class="case-industry" style="color:#A7F3D0;">Technology</div>
+        <h3>Data Cloud Unification for a Global SaaS Company</h3>
+        <p class="case-sub">Unified 14 disconnected data sources into one customer profile powering real-time segmentation across 5 products.</p>
+      </div>
+      <div class="case-body">
+        <div class="case-metrics">
+          <div class="metric"><div class="metric-val">14→1</div><div class="metric-label">Data sources unified</div></div>
+          <div class="metric"><div class="metric-val">89%</div><div class="metric-label">Segment accuracy improvement</div></div>
+        </div>
+        <div class="case-tags">
+          <span class="tag">Data Cloud</span><span class="tag">Identity Resolution</span><span class="tag">API Integration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-strip">
+    <h2>Want Results Like These?</h2>
+    <p>Let's talk about what's possible for your organization.</p>
+    <button class="btn-white" onclick="showPage('contact')">Book a Discovery Call</button>
+  </div>
+</div>
+
+<!-- ===== CONTACT ===== -->
+<div class="page" id="page-contact">
+  <div class="page-hero">
+    <div class="page-hero-grid"></div>
+    <span class="section-tag" style="position:relative;z-index:2;">Get In Touch</span>
+    <h1>Let's Build Something Remarkable Together</h1>
+    <p>Whether you're starting from scratch or optimizing an existing implementation, we'd love to hear about your goals.</p>
+  </div>
+
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h2>Start the Conversation</h2>
+      <p>Our consultants are ready to help you assess your current Marketing Cloud maturity and identify the highest-impact opportunities. The first call is always on us.</p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <h4>Headquarters</h4>
+            <p>Virginia — serving clients nationwide and globally</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div>
+            <h4>Email Us</h4>
+            <p>hello@snowrainbowllc.com</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <h4>Call Us</h4>
+            <p>+1 (312) 555-0194</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <h4>Response Time</h4>
+            <p>We respond to all inquiries within 1 business day</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h3 style="font-family:'Playfair Display',serif;font-size:24px;color:#032D60;margin-bottom:28px;">Request a Free Consultation</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Goutham">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Reddy">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Work Email</label>
+        <input type="email" placeholder="you@company.com">
+      </div>
+      <div class="form-group">
+        <label>Company Name</label>
+        <input type="text" placeholder="Your company">
+      </div>
+      <div class="form-group">
+        <label>What do you need help with?</label>
+        <select>
+          <option value="">Select a service...</option>
+          <option>Journey Builder & Automation</option>
+          <option>Email Studio Optimization</option>
+          <option>Data Cloud Integration</option>
+          <option>Einstein AI Implementation</option>
+          <option>Platform Migration</option>
+          <option>Managed Services</option>
+          <option>General Consultation</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tell us about your project</label>
+        <textarea placeholder="Share your goals, current challenges, or timeline..."></textarea>
+      </div>
+      <button class="btn-primary" style="width:100%;padding:16px;" onclick="submitForm()">Send Message →</button>
+      <div class="form-success" id="form-success">
+        ✅ Thank you! We'll be in touch within 1 business day.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <svg viewBox="0 0 36 36" fill="none" width="32" height="32">
+          <circle cx="18" cy="18" r="17" fill="rgba(0,161,224,0.12)" stroke="rgba(0,161,224,0.4)" stroke-width="1"/>
+          <path d="M18 8 Q24 12 26 18 Q24 24 18 28 Q12 24 10 18 Q12 12 18 8Z" fill="none" stroke="#00A1E0" stroke-width="1.5"/>
+          <circle cx="18" cy="10" r="2" fill="#FF6B35"/>
+          <circle cx="26" cy="18" r="2" fill="#00A1E0"/>
+          <circle cx="18" cy="26" r="2" fill="#B0E0F5"/>
+          <circle cx="10" cy="18" r="2" fill="#0176D3"/>
+          <circle cx="18" cy="18" r="3.5" fill="#00A1E0"/>
+        </svg>
+        <span class="nav-logo-text" style="font-size:18px;">Snow <span>Rainbow</span> LLC</span>
+      </div>
+      <p>Illuminating every customer journey through expert Salesforce Marketing Cloud strategy, implementation, and optimization.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a onclick="showPage('services')">Journey Builder</a>
+      <a onclick="showPage('services')">Email Studio</a>
+      <a onclick="showPage('services')">Data Cloud</a>
+      <a onclick="showPage('services')">Einstein AI</a>
+      <a onclick="showPage('services')">Managed Services</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a onclick="showPage('about')">About Us</a>
+      <a onclick="showPage('cases')">Case Studies</a>
+      <a onclick="showPage('contact')">Careers</a>
+      <a onclick="showPage('contact')">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a>hello@snowrainbowllc.com</a>
+      <a>+1 (312) 555-0194</a>
+      <a>Virginia</a>
+      <a onclick="showPage('contact')">Book a Call</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Snow Rainbow LLC. All rights reserved.</p>
+    <div class="footer-cert">
+      <span class="cert-badge">Salesforce Partner</span>
+      <span class="cert-badge">MC Certified</span>
+      <span class="cert-badge">Data Cloud Ready</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    const navEl = document.getElementById('nav-' + id);
+    if (navEl) navEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function submitForm() {
+    const btn = event.target;
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    }, 1200);
+  }
+</script>
+</body>
+</html>
